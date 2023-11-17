@@ -1,19 +1,40 @@
 "use client"
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { ErrorBoundary } from 'next/dist/client/components/error-boundary'
 
 type Props = {}
 
 const Register = (props: Props) => {
     const [nom,setNome]=useState("")
     const [prenom,setPrenom]=useState("")
+
+    const router = useRouter()
     
+    async function handlerSubmit(e:any){
+        e.preventDefault();
+        const res=await fetch('http://localhost:3000/api/users',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({nom,prenom})
+        })
+        if(!res.ok){
+            return 
+        }
+        console.log("object");
+        setNome("")
+        setPrenom('')
+        router.push('/chat')
+    }
 
   return (
     <>  
         <div className='text-center mt-5'>
             <h1 className='md:text-7xl lg:text-8xl sm:text-5xl text-3xl inline-block typewriter'>OPEN CHAT</h1>
         </div>
-        <div className='flex flex-col gap-y-3 justify-center items-center h-[45vh]'>
+        <div className='flex flex-col gap-y-3 justify-center items-center h-[45vh]' onSubmit={handlerSubmit}>
             <h1 className='font-bold text-lg'>register</h1>
             <form action="" className='flex flex-col gap-y-4 w-[60%] xl:w-[30%] lg:w-[30%]'>
                 <input onChange={e=>setNome(e.target.value)} value={nom} type="text" placeholder='nom' className='bg-white/25 h-9 rounded-md text-center'/>
