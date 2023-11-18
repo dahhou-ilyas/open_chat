@@ -12,6 +12,7 @@ type User={
 
 const ChatPage = (props: Props) => {
     const [users,setUsers]=useState<User[]>([])
+    const [userSelct,setUserSelct]=useState<String>()
     useEffect(()=>{
         fetch("/api/users").then(res=>{
             res.json().then(data=>{
@@ -19,20 +20,32 @@ const ChatPage = (props: Props) => {
             })
         })
     },[])
+
+    function handelSubmite(e:any){
+        e.preventDefault();
+    }
   return (
-    <div className='flex flex-row'>
+    <div className='flex flex-row h-[70vh]'>
         <div className='w-[25%]'>
             {
                 users.map(user=>{
+                    function handleClikc(){
+                        setUserSelct(user.socketid)
+                    }
                     return (
-                        <div className='border border-black cursor-pointer' key={user._id}>
+                        <div onClick={handleClikc} className='border border-black cursor-pointer' key={user._id}>
                             {user.nom} {user.prenom}
                         </div>
                     )
                 })
             }
         </div>
-        <div className='w-[74%]'>boit chat</div>
+        <div className='w-[74%] border relative'>
+            <form action="" onSubmit={handelSubmite}>
+                <input type="text" className='text-black absolute bottom-0 w-[85%]' />
+                <button type='submit' className='absolute bottom-0 right-0 w-[15%] bg-white/25'>envoi</button>
+            </form>
+        </div>
     </div>
   )
 }
