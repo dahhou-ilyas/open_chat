@@ -7,13 +7,14 @@ export async function GET(){
 }
 
 export async function POST(request:Request){
-    const {nom,prenom}=await request.json();
-    if(!nom || !prenom) return NextResponse.json({'message':"Missing required data"});
+    const {nom,prenom,socketid}=await request.json();
+    console.log(socketid);
+    if(!nom || !prenom || !socketid) return NextResponse.json({'message':"Missing required data"});
     const {Chat}=await connect();
     const suerChat=Chat.create({
         nom:nom,
-        prenom:prenom
-        socketid:!!!!!
+        prenom:prenom,
+        socketid:socketid
     }).catch(e=>{
         NextResponse.json({'message':"Error avec mongodb"})
     })

@@ -1,5 +1,4 @@
 "use client"
-import { type } from 'os'
 import React, { useEffect, useState } from 'react'
 
 type Props = {}
@@ -14,7 +13,7 @@ type User={
 const ChatPage = (props: Props) => {
     const [users,setUsers]=useState<User[]>([])
     useEffect(()=>{
-        fetch("http://localhost:3000/api/users").then(res=>{
+        fetch("/api/users").then(res=>{
             res.json().then(data=>{
                 setUsers(data)
             })
@@ -24,7 +23,7 @@ const ChatPage = (props: Props) => {
     <div>
         {
             users.map(user=>{
-                return (<div>{user.nom}</div>)
+                return (<div key={user._id}>{user.nom}</div>)
             })
         }
     </div>

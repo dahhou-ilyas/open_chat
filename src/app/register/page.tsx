@@ -1,29 +1,33 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 import { useRouter } from 'next/navigation'
-import { ErrorBoundary } from 'next/dist/client/components/error-boundary'
+import { io } from 'socket.io-client'
 
 type Props = {}
 
 const Register = (props: Props) => {
     const [nom,setNome]=useState("")
     const [prenom,setPrenom]=useState("")
-
+    const [socket,setSocket]=useState<any>(undefined)
     const router = useRouter()
+
     
+    useEffect(()=>{
+        const socket=io('http://localhost:3000')
+        setSocket(socket)
+    },[])
     async function handlerSubmit(e:any){
         e.preventDefault();
-        const res=await fetch('http://localhost:3000/api/users',{
+        const res=await fetch('/api/users',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
             },
-            body:JSON.stringify({nom,prenom})
+            body:JSON.stringify({nom,prenom,socketid:socket.id})
         })
         if(!res.ok){
             return 
         }
-        console.log("object");
         setNome("")
         setPrenom('')
         router.push('/chat')
