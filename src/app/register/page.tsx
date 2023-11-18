@@ -15,10 +15,6 @@ const Register = (props: Props) => {
     useEffect(()=>{
         const socket=io('http://localhost:3000')
         setSocket(socket)
-
-        return () => {
-            socket.disconnect();
-        };
         
     },[])
     async function handlerSubmit(e:any){

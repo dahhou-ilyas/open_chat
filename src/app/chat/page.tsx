@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 
 
@@ -17,8 +17,8 @@ const ChatPage = (props: Props) => {
     const [userSelct,setUserSelct]=useState<String>()
     const [chat,setChat]=useState("")
     const [discusion,setDiscusion]=useState<string[]>([])
-    const socketid = localStorage.getItem('socketid');
-    console.log(socketid);
+    const [socket,setSocket]=useState<any>(undefined)
+    
     useEffect(()=>{
         fetch("/api/users").then(res=>{
             res.json().then(data=>{
@@ -26,6 +26,25 @@ const ChatPage = (props: Props) => {
             })
         })
     },[])
+
+    useEffect(() => {
+        // Récupérer la valeur de socketid depuis le localStorage
+        const socketid = localStorage.getItem('socketid');
+        console.log('user chat '+ socketid);
+        // Vérifier si socketid existe
+        if (socketid) {
+          const sockett = io('http://localhost:3000', { query: { socketid } });
+          sockett.on('message',(chat:any)=>{
+            setDiscusion(prev=>{
+                return [...prev,chat]
+            })
+          })
+            setSocket(sockett)
+
+        } else {
+            console.log("error en chat fuckk ");
+        }
+      }, []);
 
 
     function handelSubmite(e:any){
@@ -36,6 +55,8 @@ const ChatPage = (props: Props) => {
         setDiscusion(prev=>{
             return [...prev,chat]
         })
+
+        socket.emit('message',chat)
         // const socket=io('http://localhost:3000',{query:}).
         setChat('')
         
@@ -46,6 +67,7 @@ const ChatPage = (props: Props) => {
             {
                 users.map(user=>{
                     function handleClikc(){
+                        console.log(user.socketid);
                         setUserSelct(user.socketid)
                     }
                     return (
