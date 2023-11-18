@@ -20,12 +20,19 @@ const ChatPage = (props: Props) => {
         })
     },[])
   return (
-    <div>
-        {
-            users.map(user=>{
-                return (<div key={user._id}>{user.nom}</div>)
-            })
-        }
+    <div className='flex flex-row'>
+        <div className='w-[25%]'>
+            {
+                users.map(user=>{
+                    return (
+                        <div className='border border-black cursor-pointer' key={user._id}>
+                            {user.nom} {user.prenom}
+                        </div>
+                    )
+                })
+            }
+        </div>
+        <div className='w-[74%]'>boit chat</div>
     </div>
   )
 }
