@@ -15,6 +15,11 @@ const Register = (props: Props) => {
     useEffect(()=>{
         const socket=io('http://localhost:3000')
         setSocket(socket)
+
+        return () => {
+            socket.disconnect();
+        };
+        
     },[])
     async function handlerSubmit(e:any){
         e.preventDefault();
@@ -28,13 +33,16 @@ const Register = (props: Props) => {
         if(!res.ok){
             return 
         }
+
+        localStorage.setItem('socketid', socket.id);
+
         setNome("")
         setPrenom('')
         router.push('/chat')
     }
 
   return (
-    <>  
+    <> 
         <div className='text-center mt-5'>
             <h1 className='md:text-7xl lg:text-8xl sm:text-5xl text-3xl inline-block typewriter'>OPEN CHAT</h1>
         </div>
